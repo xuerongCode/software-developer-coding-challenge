@@ -5,6 +5,7 @@ This is a coding challenge for software developer applicants applying through ht
 ## Goal:
 #### You have been tasked with building a simple online car auction system which will allow users to bid on cars for sale and with the following funcitionalies: 
 
+  - [ ] Fork this repo. Keep it public until we have been able to review it.
   - [ ] A simple auction bidding system
   - [ ] Record a user's bid on a car
   - [ ] Get the current winning bid for a car
