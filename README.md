@@ -3,6 +3,7 @@
 This is a coding challenge for software developer applicants applying through http://work.traderev.com/
 
 ## Goal:
+
 #### You have been tasked with building a simple online car auction system which will allow users to bid on cars for sale and with the following funcitionalies: 
 
   - [ ] Fork this repo. Keep it public until we have been able to review it.
@@ -18,7 +19,7 @@ This is a coding challenge for software developer applicants applying through ht
 
 ## Evaluation:
 
- - [ ] Solution compiles. If there are necessary steps required to get it to compile, those should be covered in README.md.
+ - [ ] Solution compiles. Provide a README to run/build the project and explain anything that you leave aside
  - [ ] No crashes, bugs, compiler warnings
  - [ ] App operates as intended
  - [ ] Conforms to SOLID principles
