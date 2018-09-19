@@ -124,6 +124,7 @@ public class GeneralController implements ErrorController {
 
             // Get foreign reference
             Auction auction = auctionRepo.getOne(id);
+            Vehicle vehicle = auction.getVehicle();
             User user = userRepo.getOne(userId);
 
             Bid currentWinBid = auction.getCurrentWinBid();
@@ -135,10 +136,10 @@ public class GeneralController implements ErrorController {
                 // Check If amount is greater than current amount.
                 if ( ! (currentWinBid.getAmount().getAmount().compareTo(bidAmount.getAmount()) < 0))
                     throw new BidRejectException("Bid amount is less than current winner: " + currentWinBid.getAmount().getAmount());
-                // Check If currency match
-                if (! currentWinBid.getAmount().getCurrency().equals(bidAmount.getCurrency()))
-                    throw new RuntimeException("The currency for the auction is: "+bidAmount.getCurrency());
             }
+            // Check If currency match
+            if (! vehicle.getPrice().getCurrency().equals(bidAmount.getCurrency()))
+                throw new RuntimeException("The currency for the auction is: "+bidAmount.getCurrency());
 
             Bid newBid = new Bid();
             newBid.setAuction(auction);
