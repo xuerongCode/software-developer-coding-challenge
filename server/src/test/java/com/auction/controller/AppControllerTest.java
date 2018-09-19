@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class GeneralControllerTest {
+public class AppControllerTest {
 
     @Autowired
     private MockMvc mvc;

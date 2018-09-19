@@ -1,12 +1,6 @@
 package com.auction.controller;
 
-import com.auction.db.AuctionRepo;
-import com.auction.db.BidRepo;
-import com.auction.db.UserRepo;
-import com.auction.db.VehicleRepo;
 import com.auction.db.model.*;
-import com.auction.db.model.Currency;
-import com.auction.exception.BidRejectException;
 import com.auction.exception.HttpError;
 import com.auction.service.AuctionService;
 import com.auction.service.GeneralService;
@@ -21,7 +15,7 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController()
-public class GeneralController implements ErrorController {
+public class AppController implements ErrorController {
 
     @Autowired
     private GeneralService generalService;
