@@ -46,38 +46,16 @@ public class ModelCLR implements CommandLineRunner {
         typerVechicle = vehicleRepo.save(typerVechicle);
 
         // Create Auction for both Vehicles.
-        Date now = new Date();
+        Date now = new Date(0);
         // Auction starts now, and last 30 minutes.
         Auction raptorAuction = new Auction(now, Long.valueOf(60*30*1000));
         // Auction starts 2 minutes later, and last 20 minutes.
-        Auction typerAuction = new Auction(new Date(now.getTime() + 60*2*1000), Long.valueOf(60*10*1000));
+        Auction typerAuction = new Auction(new Date(0 + 60*2*1000), Long.valueOf(60*10*1000));
         raptorAuction.setVehicle(raptorVechicle);
         typerAuction.setVehicle(typerVechicle);
         auctionRepo.save(raptorAuction);
         auctionRepo.save(typerAuction);
 
-//
-//        // Create Bids.
-////        Bid bid = new Bid();
-////        bid.setAuction(raptorAuction);
-////        bid.setUser(xuerongUser);
-////        bid.setAmount(new Amount(new Double(1000), Currency.CAD));
-////        bid = bidRepo.save(bid);
-//
-//        //userRepo.delete(xuerongUser);
-//        //vehicleRepo.delete(raptorVechicle);
-//
-//        //vehicleRepo.delete(raptorVechicle);
-
-//        Vehicle vehicle = new Vehicle();
-//        Vehicle savedVehicle = vehicleRepo.save(vehicle);
-//        Auction auction = new Auction();
-//        auction.setStartAt(new Date());
-//        auction.setVehicle(savedVehicle);
-//        Auction savedAuction = auctionRepo.save(auction);
-
-//        Vehicle getVehicle = vehicleRepo.getOne(savedVehicle.getId());
-        //System.out.println(getVehicle.getAuction());
 
     }
 }
