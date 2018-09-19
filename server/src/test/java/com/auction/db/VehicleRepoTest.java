@@ -1,5 +1,6 @@
 package com.auction.db;
 
+import com.auction.db.AuctionRepo;
 import com.auction.db.VehicleRepo;
 import com.auction.db.model.Amount;
 import com.auction.db.model.Auction;

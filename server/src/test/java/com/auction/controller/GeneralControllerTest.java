@@ -1,4 +1,4 @@
-package com.auction.db.model;
+package com.auction.controller;
 
 import com.auction.db.UserRepo;
 import org.hamcrest.Matchers;
@@ -75,7 +75,7 @@ public class GeneralControllerTest {
     public void selectAllBids() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/bid").accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$", empty()));
     }
     @Test
     public void findUserById() throws Exception {
@@ -137,21 +137,21 @@ public class GeneralControllerTest {
     public void selectBidsByUser() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/user/1/bid").accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$", emptyArray()));
+                .andExpect(jsonPath("$", hasSize(0)));
 
     }
     @Test
     public void selectBidsByAuction() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/auction/1/bid").accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$", emptyArray()));
+                .andExpect(jsonPath("$", empty()));
 
     }
     @Test
     public void selectBidsByVehicle() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/vehicle/1/bid").accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$", emptyArray()));
+                .andExpect(jsonPath("$", empty()));
 
     }
 
