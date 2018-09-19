@@ -84,29 +84,5 @@ public class VehicleRepoTest {
         other = vehicleRepo.getOne(id);
 
     }
-
-//    @Test(expected = java.lang.IllegalStateException.class)
-//    public void save_a_vechile_with_auction() {
-//        Vehicle vehicle = new Vehicle();
-//        Auction auction = new Auction();
-//        auction.setStartAt(new Date());
-//        vehicle.setAuction(auction);
-//        entityManager.persistAndFlush(vehicle);
-//
-//    }
-//
-//    @Test
-//    public void delete_a_vechile_with_auction() {
-//        System.out.println(auctionRepo);
-//        Vehicle vehicle = new Vehicle();
-//        Vehicle savedVehicle = entityManager.persistAndFlush(vehicle);
-//        Auction auction = new Auction();
-//        auction.setStartAt(new Date());
-//        auction.setVehicle(savedVehicle);
-//        Auction savedAuction = entityManager.persistAndFlush(auction);
-//
-//        Vehicle getVehicle = vehicleRepo.getOne(savedVehicle.getId());
-//        assertThat(auctionRepo.findAll().size()).isEqualTo(1);
-//        vehicleRepo.delete(getVehicle);
-//    }
+    
 }
