@@ -1,5 +1,6 @@
 package com.auction.exception.handler;
 
+import com.auction.exception.BidRejectException;
 import com.auction.exception.HttpError;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return buildResponseEntity(new HttpError(HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(value = BidRejectException.class)
+    public ResponseEntity<Object> handBidRejectException(BidRejectException ex) {
+        return buildResponseEntity(new HttpError(HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(value = RuntimeException.class)
+    public ResponseEntity<Object> handRuntimeException(RuntimeException ex) {
         return buildResponseEntity(new HttpError(HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
