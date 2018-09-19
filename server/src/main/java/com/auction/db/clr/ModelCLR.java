@@ -55,7 +55,5 @@ public class ModelCLR implements CommandLineRunner {
         typerAuction.setVehicle(typerVechicle);
         auctionRepo.save(raptorAuction);
         auctionRepo.save(typerAuction);
-
-
     }
 }
