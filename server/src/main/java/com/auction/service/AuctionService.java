@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuctionService {
     @Autowired
-    UserRepo userRepo;
+    private UserRepo userRepo;
     @Autowired
     private BidRepo bidRepo;
     @Autowired
