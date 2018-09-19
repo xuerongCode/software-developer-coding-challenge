@@ -87,6 +87,16 @@ public class GeneralController implements ErrorController {
 
     }
 
+    @GetMapping(value = "user/{userId}/vehicle/{vehicleId}/bid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String selectBidsOfVehicleByUser(@PathVariable("userId") Long userId, @PathVariable("vehicleId") Long vehicleId) {
+        Vehicle vehicle = vehicleRepo.getOne(vehicleId);
+        Auction auction = new Auction();
+        auction.setId(vehicle.getAuction().getId());
+        User user = new User();
+        user.setId(userId);
+        return printJsonList(bidRepo.findByAuctionAndUser(auction, user));
+    }
+
     @GetMapping(value= "auction/{auctionId}/currentWinUser", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getCurrentWinUser(@PathVariable("auctionId") Long auctionId) {
         Auction auction = auctionRepo.getOne(auctionId);

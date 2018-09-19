@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@NamedQuery(name="Bid.findByAuctionAndUser", query = "SELECT b FROM Bid b WHERE b.auction = ?1 and b.user = ?2")
 @Table(name = "bid")
 public class Bid {
 

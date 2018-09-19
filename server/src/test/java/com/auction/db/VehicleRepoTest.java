@@ -84,5 +84,5 @@ public class VehicleRepoTest {
         other = vehicleRepo.getOne(id);
 
     }
-    
+
 }
