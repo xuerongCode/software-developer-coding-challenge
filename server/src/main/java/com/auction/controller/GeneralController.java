@@ -70,9 +70,7 @@ public class GeneralController implements ErrorController {
     }
 
     @GetMapping(value= "user/{userId}/bid", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String selectBidsByUser(@PathVariable("userId") Long userId) {
-        return printJsonList(Arrays.asList(userRepo.getOne(userId).getBids().toArray()));
-    }
+    public String selectBidsByUser(@PathVariable("userId") Long userId) { return printJsonArray(userRepo.getOne(userId).getBids().toArray()); }
 
     @GetMapping(value= "auction/{auctionId}/bid", produces = MediaType.APPLICATION_JSON_VALUE)
     public String selectBidsByAuction(@PathVariable("auctionId") Long auctionId) {
@@ -158,6 +156,16 @@ public class GeneralController implements ErrorController {
         for (int i = 0 ; i<list.size(); i++){
             ret += list.get(i).toString();
             if ( i < list.size()-1)
+                ret += ',';
+        }
+        return ret+= "]";
+    }
+
+    private <T> String printJsonArray(T[] Ts) {
+        String ret = "[";
+        for (int i = 0 ; i<Ts.length; i++){
+            ret += Ts[i].toString();
+            if ( i < Ts.length-1)
                 ret += ',';
         }
         return ret+= "]";
