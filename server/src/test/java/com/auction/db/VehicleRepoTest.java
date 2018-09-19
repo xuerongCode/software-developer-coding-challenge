@@ -14,8 +14,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Date;
-
 import static org.assertj.core.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
@@ -23,23 +21,26 @@ import static org.assertj.core.api.Assertions.*;
 public class VehicleRepoTest {
 
     @Autowired
-    private TestEntityManager entityManager;
-
-    @Autowired
     private VehicleRepo vehicleRepo;
-
-    @Autowired
-    private AuctionRepo auctionRepo;
 
 
     @Test
-    public void save_a_vechile() {
+    public void saveVechile() {
+        Vehicle vehicle = new Vehicle();
+        vehicle.setName("raptor");
+        vehicle.setPrice(new Amount(80000.01, Currency.CAD));
+        vehicleRepo.save(vehicle);
+    }
+
+    @Test
+    public void findVehicle() {
         Vehicle vehicle = new Vehicle();
         vehicle.setName("raptor");
         vehicle.setImageUrl("raptorImage");
         vehicle.setPrice(new Amount(80000.01, Currency.CAD));
 
-        Vehicle savedVehicle = entityManager.persistAndFlush(vehicle);
+        vehicle = vehicleRepo.save(vehicle);
+        Vehicle savedVehicle = vehicleRepo.getOne(vehicle.getId());
 
         assertThat(savedVehicle).isNotEqualTo(null);
         assertThat(savedVehicle.getId()).isEqualTo(vehicle.getId());
@@ -48,40 +49,15 @@ public class VehicleRepoTest {
         assertThat(savedVehicle.getPrice().getCurrency()).isEqualTo(vehicle.getPrice().getCurrency());
     }
 
-    @Test
-    public void update_a_vehicle() {
+    @Test()
+    public void removeVehicle() {
         Vehicle vehicle = new Vehicle();
-        Vehicle o = entityManager.persistAndFlush(vehicle);
-        Long id = o.getId();
-
-        vehicle.setId(id);
         vehicle.setName("raptor");
         vehicle.setImageUrl("raptorImage");
         vehicle.setPrice(new Amount(80000.01, Currency.CAD));
-        entityManager.persistAndFlush(vehicle);
 
-        Vehicle other = vehicleRepo.getOne(id);
-
-        assertThat(other).isNotEqualTo(null);
-        assertThat(other.getId()).isEqualTo(vehicle.getId());
-        assertThat(other.getName()).isEqualTo(vehicle.getName());
-        assertThat(other.getImageUrl()).isEqualTo(vehicle.getImageUrl());
-        assertThat(other.getPrice().getCurrency()).isEqualTo(vehicle.getPrice().getCurrency());
-    }
-
-    @Test(expected = JpaObjectRetrievalFailureException.class)
-    public void remove_a_vehicle() {
-        Vehicle vehicle = new Vehicle();
-        Vehicle o = vehicleRepo.save(vehicle);
-        Long id = o.getId();
-
-        Vehicle other = vehicleRepo.getOne(id);
-        assertThat(other).isNotEqualTo(null);
-
-        vehicle.setId(id);
-        vehicleRepo.delete(vehicle);
-
-        other = vehicleRepo.getOne(id);
+        Vehicle savedVehicle = vehicleRepo.save(vehicle);
+        vehicleRepo.delete(savedVehicle);
 
     }
 
