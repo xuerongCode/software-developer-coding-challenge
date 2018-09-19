@@ -6,19 +6,18 @@ import com.auction.db.UserRepo;
 import com.auction.db.VehicleRepo;
 import com.auction.db.model.*;
 import com.auction.db.model.Currency;
+import com.auction.exception.BidRejectException;
 import com.auction.exception.HttpError;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.xml.ws.Response;
 import java.util.*;
-import java.util.stream.Collectors;
 
-@RestController
+@RestController()
 public class GeneralController implements ErrorController {
     private UserRepo userRepo;
     private VehicleRepo vehicleRepo;
@@ -32,57 +31,65 @@ public class GeneralController implements ErrorController {
         this.auctionRepo = auctionRepo;
     }
 
-    @GetMapping("/user")
+    @GetMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     public String selectAllUsers() {
         return printJsonList(userRepo.findAll());
     }
 
-    @GetMapping("/vehicle")
+    @GetMapping(value= "/vehicle", produces = MediaType.APPLICATION_JSON_VALUE)
     public String selectAllVechiles() {
         return printJsonList(vehicleRepo.findAll());
     }
 
-    @GetMapping("/auction")
+    @GetMapping(value= "/auction", produces = MediaType.APPLICATION_JSON_VALUE)
     public String selectAllAuctions() {
         return printJsonList(auctionRepo.findAll());
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping(value= "/bid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String selectAllBids() { return printJsonList(bidRepo.findAll()); }
+
+    @GetMapping(value= "/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public String findUserById(@PathVariable("id") Long id) {
         return userRepo.getOne(id).toString();
     }
 
-    @GetMapping("/vehicle/{id}")
+    @GetMapping(value= "/vehicle/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public String findVechileById(@PathVariable("id") Long id){
         return vehicleRepo.getOne(id).toString();
     }
 
-    @GetMapping("/auction/{id}")
+    @GetMapping(value= "/auction/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public String findAuctionById(@PathVariable("id") Long id) {
         return auctionRepo.getOne(id).toString();
     }
 
-    @GetMapping("/bid")
-    public String selectAllBids() {
-        return printJsonList(bidRepo.findAll());
-    }
-
-    @GetMapping("/bid/{id}")
+    @GetMapping(value= "/bid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public String findBidById(@PathVariable("id") Long id) {
         return bidRepo.getOne(id).toString();
     }
 
-    @GetMapping("user/{userId}/bid")
+    @GetMapping(value= "user/{userId}/bid", produces = MediaType.APPLICATION_JSON_VALUE)
     public String selectBidsByUser(@PathVariable("userId") Long userId) {
         return printJsonList(Arrays.asList(userRepo.getOne(userId).getBids().toArray()));
     }
 
-    @GetMapping("auction/{auctionId}/bid")
+    @GetMapping(value= "auction/{auctionId}/bid", produces = MediaType.APPLICATION_JSON_VALUE)
     public String selectBidsByAuction(@PathVariable("auctionId") Long auctionId) {
         return printJsonList(Arrays.asList(auctionRepo.getOne(auctionId).getBids().toArray()));
     }
 
-    @GetMapping("auction/{auctionId}/currentWinUser")
+    @GetMapping(value= "vehicle/{vehicleId}/bid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String selectBidsByVehicle(@PathVariable("vehicleId") Long vehicleId) {
+        Vehicle vehicle = vehicleRepo.getOne(vehicleId);
+        Auction auction = vehicle.getAuction();
+        // TODO: throw excpetion if auction is null.
+        Set<Bid> bids = auction.getBids();
+        return printJsonList(Arrays.asList(bids.toArray()));
+
+    }
+
+    @GetMapping(value= "auction/{auctionId}/currentWinUser", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getCurrentWinUser(@PathVariable("auctionId") Long auctionId) {
         Auction auction = auctionRepo.getOne(auctionId);
         if (auction.getCurrentWinUser() != null)
@@ -91,7 +98,7 @@ public class GeneralController implements ErrorController {
             return "{}";
     }
 
-    @GetMapping("auction/{auctionId}/currentWinBid")
+    @GetMapping(value= "auction/{auctionId}/currentWinBid", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getCurrentWinBid(@PathVariable("auctionId") Long auctionId) {
         Auction auction = auctionRepo.getOne(auctionId);
         if (auction.getCurrentWinBid() != null)
@@ -102,29 +109,45 @@ public class GeneralController implements ErrorController {
 
     @PostMapping(path= "/auction/{auctionId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Object> bidForAuction(@RequestHeader("userAuth") Long userId, @PathVariable("auctionId") Long id, @Valid @RequestBody AmountPost amountPost) {
-        //TODO: thread safe
-        // Map amount request.
-        Amount bidAmount = new Amount(amountPost.getAmount(), Currency.valueOf(amountPost.getCurrency()));
+        //TODO: cash auction and lock auction to increase performance
+        synchronized (this) {
+            // Map amount request.
+            Amount bidAmount = new Amount(amountPost.getAmount(), Currency.valueOf(amountPost.getCurrency()));
 
-        // Get foreign key
-        Auction auction = auctionRepo.getOne(id);
-        User user = userRepo.getOne(userId);
+            // Get foreign reference
+            Auction auction = auctionRepo.getOne(id);
+            User user = userRepo.getOne(userId);
 
-        // Process If amount is greater than curren
+            Bid currentWinBid = auction.getCurrentWinBid();
 
-        Bid bid = new Bid();
-        bid.setUser(user);
-        bid.setAuction(auction);
-        bid.setAmount(bidAmount);
+            if ( currentWinBid != null ) {
+                // Check if user has current highest amount.
+                if (user.getId().equals(auction.getCurrentWinUser().getId()))
+                    throw new RuntimeException("User has current highest bid for the auction: " + auction.getId());
+                // Check If amount is greater than current amount.
+                if ( ! (currentWinBid.getAmount().getAmount().compareTo(bidAmount.getAmount()) < 0))
+                    throw new BidRejectException("Bid amount is less than current winner: " + currentWinBid.getAmount().getAmount());
+                // Check If currency match
+                if (! currentWinBid.getAmount().getCurrency().equals(bidAmount.getCurrency()))
+                    throw new RuntimeException("The currency for the auction is: "+bidAmount.getCurrency());
+            }
 
-        Bid saveBid = bidRepo.save(bid);
-        auction.setCurrentWinUser(user);
-        auction.setCurrentWinBid(saveBid);
-        auctionRepo.save(auction);
-        return new ResponseEntity<Object>(saveBid.toString(), HttpStatus.OK);
+            Bid newBid = new Bid();
+            newBid.setAuction(auction);
+            newBid.setAmount(bidAmount);
+            newBid.setUser(user);
+            newBid = bidRepo.save(newBid);
+
+            // Update auction.
+            auction.setCurrentWinUser(user);
+            auction.setCurrentWinBid(newBid);
+            auctionRepo.save(auction);
+
+            return new ResponseEntity<Object>(newBid.toString(), HttpStatus.OK);
+        }
     }
 
-    @RequestMapping("/error")
+    @RequestMapping(value = "/error", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> handleError() {
         return new ResponseEntity<Object>(new HttpError(HttpStatus.NOT_FOUND, "No Found Service: wrong url"), HttpStatus.NOT_FOUND);
     }
