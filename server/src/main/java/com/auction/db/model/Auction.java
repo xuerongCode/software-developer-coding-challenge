@@ -95,11 +95,15 @@ public class Auction {
 
     @Override
     public String toString() {
+        String windBidId = getCurrentWinBid() == null ? "null" : "\"" + getCurrentWinBid().getId() + "\"";
+        String winUserId = getCurrentWinUser() == null ? "null" : "\"" + getCurrentWinUser().getId() + "\"";
         return "{\"_class\":\"Auction\""
                 + ',' + "\"id\":" + id
-                + ',' + "\"startAt\":" + startAt
+                + ',' + "\"startAt\":\"" + startAt + "\""
                 + ',' + "\"duration\":" + duration
-                + ',' + "\"vehicle\":" + vehicle
+                + ',' + "\"vehicleId\":" + vehicle.getId()
+                + ',' + "\"currentWinUserId\":" + winUserId
+                + ',' + "\"currentWinBidId\":" + windBidId
                 + "}";
     }
 }

@@ -77,6 +77,8 @@ public class Bid {
         return "{\"_class\":\"Bid\""
                 + ',' + "\"id\":" + id
                 + ',' + "\"amount\":" + amount
+                + ',' + "\"userId\":" + user.getId()
+                + ',' + "\"auctionId\":" + auction.getId()
                 + "}";
     }
 }

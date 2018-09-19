@@ -46,7 +46,7 @@ public class Amount {
     public String toString() {
         return "{\"_class\":\"Amount\""
                 + ',' + "\"amount\":" + amount
-                + ',' + "\"currency\":" + currency
+                + ',' + "\"currency\":\"" + currency + "\""
                 + "}";
     }
 }

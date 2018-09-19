@@ -73,11 +73,17 @@ public class Vehicle {
 
     @Override
     public String toString() {
-        return "{\"_class\":\"Vehicle\""
+
+        String ret =  "{\"_class\":\"Vehicle\""
                 + ',' + "\"id\":" + id
                 + ',' + "\"name\":\"" + name + "\""
                 + ',' + "\"imageUrl\":\"" + imageUrl + "\""
-                + ',' + "\"price\":" + price
-                + "}";
+                + ',' + "\"price\":" + price;
+        if (getAuction() != null)
+            ret = ret + ',' + "\"auctionId\":\"" + getAuction().getId() + "\"";
+        else
+            ret = ret + ',' + "\"auctionId\":" + null;
+
+        return ret + "}";
     }
 }
