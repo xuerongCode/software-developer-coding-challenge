@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 /**
  *  Service for process auction bid
  */
@@ -34,6 +36,10 @@ public class AuctionService {
             Vehicle vehicle = auction.getVehicle();
 
             Bid currentWinBid = auction.getCurrentWinBid();
+
+            // Check if auction is expire.
+            if ( new Date().getTime() > (auction.getStartAt().getTime() + auction.getDuration().longValue()))
+                throw new BidRejectException("Auction is expired: " + auction.getId());
 
             if ( currentWinBid != null ) {
                 // Check if user has current highest amount.
