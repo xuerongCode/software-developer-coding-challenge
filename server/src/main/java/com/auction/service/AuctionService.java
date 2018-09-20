@@ -29,23 +29,23 @@ public class AuctionService {
             Amount bidAmount = new Amount(amountPost.getAmount(), Currency.valueOf(amountPost.getCurrency()));
 
             // Get foreign reference
+            User user = userRepo.getOne(userId);
             Auction auction = auctionRepo.getOne(auctionId);
             Vehicle vehicle = auction.getVehicle();
-            User user = userRepo.getOne(userId);
 
             Bid currentWinBid = auction.getCurrentWinBid();
 
             if ( currentWinBid != null ) {
                 // Check if user has current highest amount.
                 if (user.getId().equals(auction.getCurrentWinUser().getId()))
-                    throw new RuntimeException("User has current highest bid for the auction: " + auction.getId());
+                    throw new BidRejectException("User has current highest bid for the auction: " + auction.getId());
                 // Check If amount is greater than current amount.
                 if ( ! (currentWinBid.getAmount().getAmount().compareTo(bidAmount.getAmount()) < 0))
                     throw new BidRejectException("Bid amount is less than current winner: " + currentWinBid.getAmount().getAmount());
             }
             // Check If currency match
             if (! vehicle.getPrice().getCurrency().equals(bidAmount.getCurrency()))
-                throw new RuntimeException("The currency for the auction is: "+vehicle.getPrice().getCurrency());
+                throw new BidRejectException("The currency for the auction is: "+vehicle.getPrice().getCurrency());
 
             Bid newBid = new Bid();
             newBid.setAuction(auction);
