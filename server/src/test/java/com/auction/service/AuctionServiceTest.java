@@ -44,7 +44,7 @@ public class AuctionServiceTest {
         vehicle = vehicleRepo.save(vehicle);
 
         // Create an Auction.
-        Date now = new Date(0);
+        Date now = new Date();
         Auction raptorAuction = new Auction(now, Long.valueOf(60*30*1000));
         raptorAuction.setVehicle(vehicle);
         auctionId = auctionRepo.save(raptorAuction).getId();

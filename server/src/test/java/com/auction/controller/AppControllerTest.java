@@ -178,7 +178,7 @@ public class AppControllerTest {
         vehicle = vehicleRepo.save(vehicle);
 
         // Create an Auction.
-        Date now = new Date(0);
+        Date now = new Date();
         Auction auction = new Auction(now, Long.valueOf(60*30*1000));
         auction.setVehicle(vehicle);
         auction = auctionRepo.save(auction);
