@@ -74,4 +74,8 @@ public class GeneralService {
         return auction.getCurrentWinBid();
     }
 
+    public Bid getCurrentWinBidForVehicle(Long vehicleId) {
+        Vehicle vehicle = vehicleRepo.getOne(vehicleId);
+        return getCurrentWinBid(vehicle.getAuction().getId());
+    }
 }

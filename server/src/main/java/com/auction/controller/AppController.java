@@ -81,6 +81,11 @@ public class AppController implements ErrorController {
         Bid bid = generalService.getCurrentWinBid(auctionId);
         return bid != null ? bid.toString() : "{}";
     }
+    @GetMapping(value= "auction/{vehicleId}/currentWinBid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getCurrentWinBidForVehicle(@PathVariable("vehicleId") Long vehicleId) {
+        Bid bid = generalService.getCurrentWinBidForVehicle(vehicleId);
+        return bid != null ? bid.toString() : "{}";
+    }
 
     @PostMapping(path= "/auction/{auctionId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Object> bidForAuction(@RequestHeader("userAuth") Long userId, @PathVariable("auctionId") Long auctionId, @Valid @RequestBody AmountPost amountPost) {
