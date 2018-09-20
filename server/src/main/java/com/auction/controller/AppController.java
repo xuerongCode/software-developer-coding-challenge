@@ -97,7 +97,11 @@ public class AppController implements ErrorController {
         return new ResponseEntity<Object>(new HttpError(HttpStatus.NOT_FOUND, "No Found Service: wrong url"), HttpStatus.NOT_FOUND);
     }
 
-
+    /**
+     *  Helper function to convert List to JsonArray
+     * @param list
+     * @return
+     */
     private String printJsonList(List list) {
         String ret = "[";
         for (int i = 0 ; i<list.size(); i++){

@@ -3,6 +3,9 @@ package com.auction.db.model;
 import javax.persistence.*;
 import java.util.Set;
 
+/**
+ *  Model for the bid
+ */
 @Entity
 @NamedQuery(name="Bid.findByAuctionAndUser", query = "SELECT b FROM Bid b WHERE b.auction = ?1 and b.user = ?2")
 @Table(name = "bid")

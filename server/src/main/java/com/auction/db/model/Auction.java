@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
+/**
+ *  Model for the Auction
+ */
 @Entity
 @Table(name= "auction")
 public class Auction {

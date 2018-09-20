@@ -29,6 +29,7 @@ public class ModelCLR implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+        // Initial data for web application.
         // Create user Xuerong.
         User xuerongUser = new User("Xuerong");
         xuerongUser = userRepo.save(xuerongUser);
