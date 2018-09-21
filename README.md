@@ -41,7 +41,7 @@ sh runApp.sh
   - [ ] Use api to find all vehicles in the system. Record the auctionId for later using to bid
   - [ ] There are two auctions in the system. One will expire after one hour, and the other one will expire after 5 minutes.
   - [ ] For bidding an auction, you need to provide userId, auctionId, amount, and currency.
-  - [ ] There is CLI which support all APIS (/software-developer-coding-challenge/server/runApp.sh).
+  - [ ] There is CLI which support all APIs (/software-developer-coding-challenge/server/runApp.sh).
 
 ## CLI:
 ```
