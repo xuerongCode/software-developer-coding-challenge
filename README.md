@@ -46,13 +46,13 @@ sh runApp.sh
 ## CLI:
 ```
   --users : Get all users."
-	echo "      eg: sh run.sh --users"
+	eg: sh run.sh --users"
   --vehicles : Get all vehicles."
-	echo "      eg: sh run.sh --vehicles"
+	eg: sh run.sh --vehicles"
   --auctions : Get all auctions."
-	echo "      eg: sh run.sh --auctions"
+	eg: sh run.sh --auctions"
   --bids : Get all bids."
-	echo "      eg: sh run.sh --bids"
+	eg: sh run.sh --bids"
   --userById {userId} : Find User by userId."
       eg: sh run.sh --userById 1"
   --vehicleById {vehicleId} : Find vehicle by vehicleId."
